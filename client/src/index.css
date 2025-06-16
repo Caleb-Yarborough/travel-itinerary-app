@@ -1,79 +1,128 @@
+/* Import Tailwind CSS base styles (resets and defaults) */
 @tailwind base;
+
+/* Import any custom component styles you define in Tailwind */
 @tailwind components;
+
+/* Import Tailwind utility classes (e.g., p-4, text-center) */
 @tailwind utilities;
 
+/* Define base styles using Tailwind's @layer directive */
 @layer base {
+
+  /* Set global styles for the root element */
   :root {
     font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    /* Default font stack */
     line-height: 1.5;
+    /* Improve readability */
     font-weight: 400;
+    /* Default font weight */
 
     color-scheme: light dark;
+    /* Enables both light and dark theme compatibility */
     color: rgba(255, 255, 255, 0.87);
+    /* Default text color (light text) */
     background-color: #242424;
+    /* Default dark background color */
 
     font-synthesis: none;
+    /* Prevent browser font styling synthesis */
     text-rendering: optimizeLegibility;
+    /* Enhance legibility of text */
     -webkit-font-smoothing: antialiased;
+    /* Smooth fonts in WebKit browsers */
     -moz-osx-font-smoothing: grayscale;
+    /* Smooth fonts in Firefox on macOS */
   }
 
+  /* Base styles for the <body> tag */
   body {
     margin: 0;
+    /* Remove default body margin */
     display: flex;
+    /* Enable flexbox layout */
     place-items: center;
+    /* Vertically center content */
     min-width: 320px;
+    /* Prevent layout breaking on tiny screens */
     min-height: 100vh;
+    /* Full viewport height */
   }
 
+  /* Base heading style for h1 */
   h1 {
     font-size: 3.2em;
+    /* Large font size for titles */
     line-height: 1.1;
+    /* Tight line spacing */
   }
 
+  /* Base button styles */
   button {
     border-radius: 8px;
+    /* Rounded corners */
     border: 1px solid transparent;
+    /* Default no visible border */
     padding: 0.6em 1.2em;
+    /* Inner spacing */
     font-size: 1em;
+    /* Base text size */
     font-weight: 500;
+    /* Slightly bolder text */
     font-family: inherit;
+    /* Inherit font from parent */
     background-color: #1a1a1a;
+    /* Dark button background */
     cursor: pointer;
+    /* Show pointer on hover */
     transition: border-color 0.25s;
+    /* Smooth border animation */
   }
 
+  /* Base link styles */
   a {
     font-weight: 500;
+    /* Semi-bold text */
     color: #646cff;
+    /* Default link color */
     text-decoration: inherit;
+    /* Remove default underline */
   }
 
+  /* Link hover effect */
   a:hover {
     color: #535bf2;
   }
 
+  /* Button hover effect: change border color */
   button:hover {
     border-color: #646cff;
   }
 
+  /* Button focus styles for accessibility */
   button:focus,
   button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
   }
 
+  /* Light mode overrides if user prefers light color scheme */
   @media (prefers-color-scheme: light) {
     :root {
       color: #213547;
+      /* Darker text */
       background-color: #ffffff;
+      /* White background */
     }
 
     a:hover {
       color: #747bff;
+      /* Slightly different hover color for light mode */
     }
 
     button {
       background-color: #f9f9f9;
+      /* Lighter background for buttons */
     }
   }
 }

@@ -1,14 +1,10 @@
-version: '3.8'
-
 services:
   client:
     build: ./client
     ports:
-      - "3000:3000"
-    working_dir: /app
+      - "3000:80"
     volumes:
       - ./client:/app
-    command: npm run dev
     depends_on:
       - server
 
@@ -22,6 +18,8 @@ services:
     command: npm run dev
     environment:
       - REDIS_URL=redis://redis:6379
+    env_file:
+      - .env
     depends_on:
       - redis
 

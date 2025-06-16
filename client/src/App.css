@@ -1,42 +1,66 @@
+/* Styles the root container where the React app is rendered */
 #root {
   max-width: 1280px;
+  /* Limits the content width */
   margin: 0 auto;
+  /* Centers the content horizontally */
   padding: 2rem;
+  /* Adds space inside the container */
   text-align: center;
+  /* Centers the text inside */
 }
 
+/* Styles for elements with class 'logo' (e.g., logos on the page) */
 .logo {
   height: 6em;
+  /* Sets the height of the logo */
   padding: 1.5em;
+  /* Adds spacing around the logo */
   will-change: filter;
+  /* Optimizes for future filter changes */
   transition: filter 300ms;
+  /* Smooth transition effect when filter changes */
 }
+
+/* Adds a glowing drop-shadow when hovering over a logo */
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
+/* Adds a specific glowing effect for React logos on hover */
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+/* Defines an animation for spinning the logo */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
+    /* Start with no rotation */
   }
+
   to {
     transform: rotate(360deg);
+    /* Rotate 360 degrees */
   }
 }
 
+/* Applies the logo-spin animation to the second link's logo,
+   only if the user hasn't requested reduced motion */
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
 }
 
+/* Styles for elements with class 'card' (e.g., card-like containers) */
 .card {
   padding: 2em;
+  /* Adds space inside the card */
 }
 
+/* Styles for help text or documentation links */
 .read-the-docs {
   color: #888;
+  /* Sets the text color to a light gray */
 }
