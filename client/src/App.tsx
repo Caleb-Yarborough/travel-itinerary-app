@@ -4,7 +4,7 @@ import ItineraryForm from './components/ItineraryForm'; // Form component for us
 import { generateItinerary } from './api/generateItinerary'; // Function to call backend API
 import jsPDF from 'jspdf'; // Library to generate PDF documents
 import html2canvas from 'html2canvas'; // Library to convert HTML elements to canvas
-import './App.css'; // Custom CSS (optional)
+import './App.css'; // Custom CSS 
 
 // Main App component
 function App() {
