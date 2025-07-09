@@ -17,7 +17,10 @@ const PORT = parseInt(process.env.PORT || '8000', 10);
 // -------------------- MIDDLEWARE --------------------
 
 // Enable CORS for requests from the frontend (React app on port 3000)
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors({
+    origin: ['http://localhost:3000', 'http://localhost:3001'],
+}));
+
 
 // Enable parsing of JSON request bodies
 app.use(express.json());
