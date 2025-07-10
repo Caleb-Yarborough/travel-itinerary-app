@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@react-google-maps/api": "^2.20.7",
     "@tailwindcss/typography": "^0.5.16",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1"
