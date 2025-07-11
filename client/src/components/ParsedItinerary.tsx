@@ -1,5 +1,6 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import './ParsedItinerary.css'; // Make sure this file exists
 
 type PlanProps = {
     plan: {
@@ -11,6 +12,15 @@ type PlanProps = {
 };
 
 export default function ParsedItinerary({ plan }: PlanProps) {
+    const handleCopy = async () => {
+        try {
+            await navigator.clipboard.writeText(plan.plan);
+            alert('Itinerary copied to clipboard!');
+        } catch (err) {
+            console.error('Copy failed: ', err);
+        }
+    };
+
     return (
         <div
             id="itinerary-output"
@@ -24,9 +34,9 @@ export default function ParsedItinerary({ plan }: PlanProps) {
                 <p><strong>Preferences:</strong> {plan.preferences.join(', ')}</p>
             </div>
 
-            {/* Formatted Markdown Output */}
-            <div className="bg-white p-4 rounded prose max-w-none">
-                <h2 className="text-xl font-bold mb-4">Generated Itinerary</h2>
+            {/* Formatted Markdown Output with dark background */}
+            <div className="itinerary-dark-box">
+                <button onClick={handleCopy} className="copy-btn">Copy</button>
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                     {plan.plan}
                 </ReactMarkdown>

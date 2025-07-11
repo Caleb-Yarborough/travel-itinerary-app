@@ -32,6 +32,19 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+.no-bullets ul,
+.no-bullets ol {
+  list-style: none !important;
+  margin: 0;
+  padding: 0;
+}
+
+/* In case ParsedItinerary uses pseudo-elements or you still see markers: */
+.no-bullets ul li::before,
+.no-bullets ol li::before {
+  content: none !important;
+}
+
 /* Defines an animation for spinning the logo */
 @keyframes logo-spin {
   from {
@@ -63,4 +76,55 @@
 .read-the-docs {
   color: #888;
   /* Sets the text color to a light gray */
+}
+
+/* —————————————— New Itinerary Heading Colors —————————————— */
+
+/* Itinerary heading colors */
+#itinerary-output h2 {
+  color: purple !important;
+}
+
+/* Day headers */
+#itinerary-output h3 {
+  color: blue !important;
+}
+
+/* Morning labels */
+#itinerary-output h4.morning {
+  color: #d69e2e !important;
+  /* darker gold/yellow */
+}
+
+/* Afternoon labels */
+#itinerary-output h4.afternoon {
+  color: #38a169 !important;
+  /* green */
+}
+
+/* Evening labels */
+#itinerary-output h4.evening {
+  color: #800020 !important;
+  /* burgundy */
+}
+
+/* Override prose-generated heading styles */
+#itinerary-output.prose h3 {
+  /* Day X headers */
+  color: blue !important;
+}
+
+#itinerary-output.prose h4.morning {
+  color: #d69e2e !important;
+  /* Morning */
+}
+
+#itinerary-output.prose h4.afternoon {
+  color: #38a169 !important;
+  /* Afternoon */
+}
+
+#itinerary-output.prose h4.evening {
+  color: #800020 !important;
+  /* Evening */
 }
