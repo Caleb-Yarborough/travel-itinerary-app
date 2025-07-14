@@ -12,14 +12,10 @@ interface Props {
     onSubmit: (data: FormData) => void;
 }
 
-// Map container dimensions and default center
 const mapContainerStyle = { width: '100%', height: '300px' };
 const defaultCenter: google.maps.LatLngLiteral = { lat: 39.5, lng: -98.35 };
-
-// Map options for clickable POIs
 const mapOptions: google.maps.MapOptions = { clickableIcons: true };
 
-// Broad autocomplete options
 const autoOptions: google.maps.places.AutocompleteOptions = {
     fields: ['formatted_address', 'geometry', 'name'],
 };
@@ -34,12 +30,10 @@ const ItineraryForm: React.FC<Props> = ({ onSubmit }) => {
     const [map, setMap] = useState<google.maps.Map | null>(null);
     const [marker, setMarker] = useState<google.maps.LatLngLiteral | null>(null);
 
-    // Map load handler
     const handleMapLoad = (m: google.maps.Map) => {
         setMap(m);
     };
 
-    // Autocomplete selection handler
     const handlePlaceChanged = () => {
         const place = autocompleteRef.current?.getPlace();
         const label = place?.name || place?.formatted_address || '';
@@ -55,10 +49,9 @@ const ItineraryForm: React.FC<Props> = ({ onSubmit }) => {
         }
     };
 
-    // Map click handler
     const handleMapClick = (e: any) => {
         if (!e.latLng) return;
-        // POI click
+
         if (e.placeId) {
             e.stop();
             new google.maps.places.PlacesService(map!).getDetails(
@@ -78,7 +71,7 @@ const ItineraryForm: React.FC<Props> = ({ onSubmit }) => {
             );
             return;
         }
-        // Generic click
+
         const loc = { lat: e.latLng.lat(), lng: e.latLng.lng() };
         setMarker(loc);
         geocoder.current.geocode({ location: loc }, (results, status) => {
@@ -94,7 +87,6 @@ const ItineraryForm: React.FC<Props> = ({ onSubmit }) => {
         });
     };
 
-    // Form submission
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onSubmit({
@@ -104,68 +96,73 @@ const ItineraryForm: React.FC<Props> = ({ onSubmit }) => {
         });
     };
 
-    return (
-        <form onSubmit={handleSubmit} className="grid gap-6 max-w-md mx-auto">
-            <div className="text-sm text-gray-600 mb-2">
-                📍 <strong>Type</strong> to search any country, state, city, park, or landmark.<br />
-                🗺️ <strong>Click</strong> on a pin or address on the map to select it.
-            </div>
+    const inputClass =
+        'w-full bg-transparent placeholder:text-slate-300 text-white text-sm border border-slate-400 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-50 hover:border-slate-300 shadow-sm focus:shadow';
 
-            <label className="flex flex-col">
-                <span className="font-medium">Destination</span>
-                <Autocomplete
-                    onLoad={ref => (autocompleteRef.current = ref)}
-                    onPlaceChanged={handlePlaceChanged}
-                    options={autoOptions}
+    return (
+        <div className="px-4 py-8">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-md mx-auto">
+                <div className="text-sm text-gray-600">
+                    📍 <strong>Type</strong> to search any country, state, city, park, or landmark.<br />
+                    🗺️ <strong>Click</strong> on a pin or address on the map to select it.
+                </div>
+
+                <label className="flex flex-col">
+                    <span className="font-medium">Destination</span>
+                    <Autocomplete
+                        onLoad={ref => (autocompleteRef.current = ref)}
+                        onPlaceChanged={handlePlaceChanged}
+                        options={autoOptions}
+                    >
+                        <input
+                            type="text"
+                            value={destination}
+                            onChange={e => setDestination(e.target.value)}
+                            placeholder="Type or click on map"
+                            required
+                            className={inputClass}
+                        />
+                    </Autocomplete>
+                </label>
+
+                <GoogleMap
+                    mapContainerStyle={mapContainerStyle}
+                    center={marker || defaultCenter}
+                    zoom={marker ? 12 : 4}
+                    onLoad={handleMapLoad}
+                    onClick={handleMapClick}
+                    options={mapOptions}
                 >
+                    {marker && <Marker position={marker} />}
+                </GoogleMap>
+
+                <label className="flex flex-col">
+                    <span className="font-medium">Days</span>
+                    <input
+                        type="number"
+                        min={1}
+                        value={days}
+                        onChange={e => setDays(Number(e.target.value))}
+                        className={inputClass}
+                    />
+                </label>
+
+                <label className="flex flex-col">
+                    <span className="font-medium">Preferences</span>
                     <input
                         type="text"
-                        value={destination}
-                        onChange={e => setDestination(e.target.value)}
-                        placeholder="Type or click on map"
-                        required
-                        className="border rounded p-2"
+                        value={prefs}
+                        onChange={e => setPrefs(e.target.value)}
+                        placeholder="e.g. museums, hiking"
+                        className={inputClass}
                     />
-                </Autocomplete>
-            </label>
+                </label>
 
-            <GoogleMap
-                mapContainerStyle={mapContainerStyle}
-                center={marker || defaultCenter}
-                zoom={marker ? 12 : 4}
-                onLoad={handleMapLoad}
-                onClick={handleMapClick}
-                options={mapOptions}
-            >
-                {marker && <Marker position={marker} />}
-            </GoogleMap>
-
-            <label className="flex flex-col">
-                <span className="font-medium">Days</span>
-                <input
-                    type="number"
-                    min={1}
-                    value={days}
-                    onChange={e => setDays(Number(e.target.value))}
-                    className="border rounded p-2"
-                />
-            </label>
-
-            <label className="flex flex-col">
-                <span className="font-medium">Preferences</span>
-                <input
-                    type="text"
-                    value={prefs}
-                    onChange={e => setPrefs(e.target.value)}
-                    placeholder="e.g. museums, hiking"
-                    className="border rounded p-2"
-                />
-            </label>
-
-            <button type="submit" className="mt-4 px-4 py-2 bg-blue-600 text-white rounded">
-                Generate Itinerary
-            </button>
-        </form>
+                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">
+                    Generate Itinerary
+                </button>
+            </form>
+        </div>
     );
 };
 
