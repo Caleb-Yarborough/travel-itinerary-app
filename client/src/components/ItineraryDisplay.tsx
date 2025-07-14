@@ -1,3 +1,5 @@
+import './Forms.css';
+
 type ItineraryItem = {
     day: number;
     activities: string[];
@@ -14,7 +16,7 @@ export default function ItineraryDisplay({ itinerary }: Props) {
         <div className="mt-6 space-y-4">
             {itinerary.map((item) => (
                 <div key={item.day} className="border p-4 rounded shadow">
-                    <h2 className="text-xl font-semibold">Day {item.day}</h2>
+                    <h2 className="itinerary-days">Day {item.day}</h2>
                     <ul className="list-disc ml-6 mt-2">
                         {item.activities.map((activity, idx) => (
                             <li key={idx}>{activity}</li>

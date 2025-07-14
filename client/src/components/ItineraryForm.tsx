@@ -1,6 +1,7 @@
 // src/components/ItineraryForm.tsx
 import React, { useState, useRef } from 'react';
 import { Autocomplete, GoogleMap, Marker } from '@react-google-maps/api';
+import './Forms.css';
 
 export type FormData = {
     destination: string;
@@ -96,69 +97,74 @@ const ItineraryForm: React.FC<Props> = ({ onSubmit }) => {
         });
     };
 
-    const inputClass =
-        'w-full bg-transparent placeholder:text-slate-300 text-white text-sm border border-slate-400 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-50 hover:border-slate-300 shadow-sm focus:shadow';
-
     return (
-        <div className="px-4 py-8">
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-md mx-auto">
-                <div className="text-sm text-gray-600">
+        <div>
+            <form onSubmit={handleSubmit} className="itinerary-form">
+                <div className="itinerary-label">
                     📍 <strong>Type</strong> to search any country, state, city, park, or landmark.<br />
                     🗺️ <strong>Click</strong> on a pin or address on the map to select it.
                 </div>
 
-                <label className="flex flex-col">
-                    <span className="font-medium">Destination</span>
+                <label htmlFor="destination" className="itinerary-label">
+                    <span className="label-title">Destination</span>
                     <Autocomplete
                         onLoad={ref => (autocompleteRef.current = ref)}
                         onPlaceChanged={handlePlaceChanged}
                         options={autoOptions}
                     >
                         <input
+                            id="destination"
+                            name="destination"
                             type="text"
                             value={destination}
                             onChange={e => setDestination(e.target.value)}
                             placeholder="Type or click on map"
                             required
-                            className={inputClass}
+                            className="itinerary-input"
                         />
                     </Autocomplete>
                 </label>
 
-                <GoogleMap
-                    mapContainerStyle={mapContainerStyle}
-                    center={marker || defaultCenter}
-                    zoom={marker ? 12 : 4}
-                    onLoad={handleMapLoad}
-                    onClick={handleMapClick}
-                    options={mapOptions}
-                >
-                    {marker && <Marker position={marker} />}
-                </GoogleMap>
+                <div className="itinerary-label">
+                    <GoogleMap
+                        mapContainerStyle={mapContainerStyle}
+                        center={marker || defaultCenter}
+                        zoom={marker ? 12 : 4}
+                        onLoad={handleMapLoad}
+                        onClick={handleMapClick}
+                        options={mapOptions}
+                    >
+                        {marker && <Marker position={marker} />}
+                    </GoogleMap>
+                </div>
 
-                <label className="flex flex-col">
-                    <span className="font-medium">Days</span>
+                <label htmlFor="days" className="itinerary-label">
+                    <span className="label-title">Days</span>
                     <input
+                        id="days"
+                        name="days"
                         type="number"
                         min={1}
                         value={days}
                         onChange={e => setDays(Number(e.target.value))}
-                        className={inputClass}
+                        className="itinerary-input"
                     />
                 </label>
 
-                <label className="flex flex-col">
-                    <span className="font-medium">Preferences</span>
+                <label htmlFor="preferences" className="itinerary-label">
+                    <span className="label-title">Preferences</span>
                     <input
+                        id="preferences"
+                        name="preferences"
                         type="text"
                         value={prefs}
                         onChange={e => setPrefs(e.target.value)}
                         placeholder="e.g. museums, hiking"
-                        className={inputClass}
+                        className="itinerary-input"
                     />
                 </label>
 
-                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">
+                <button type="submit" className="itinerary-button">
                     Generate Itinerary
                 </button>
             </form>

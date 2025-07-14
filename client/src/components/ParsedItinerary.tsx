@@ -1,6 +1,6 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import './ParsedItinerary.css'; // Make sure this file exists
+import './ParsedItinerary.css';
 
 type PlanProps = {
     plan: {
