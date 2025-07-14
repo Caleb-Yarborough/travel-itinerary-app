@@ -1,7 +1,10 @@
+// server/ai/generatePlan.ts
+
 // Import the OpenAI SDK to interact with the OpenAI API
 import { OpenAI } from 'openai';
+import redis from '../utils/redis';
 
-// Debug log: Print the beginning of the API key to confirm it's loaded (never log full keys in production)
+// Debug log: Print the beginning of the API key to confirm it’s loaded
 console.log("OPENAI key (start):", process.env.OPENAI_API_KEY?.slice(0, 10));
 
 // Create an instance of the OpenAI client using the API key from environment variables
@@ -15,15 +18,32 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
  * @returns The AI-generated itinerary as a string (day-by-day breakdown)
  */
 export async function generateItineraryAI(destination: string, days: number, preferences: string[]) {
+    // Create a unique cache key based on the user inputs
+    const cacheKey = `plan:${destination}:${days}:${preferences.join(',')}`;
+
+    // Check Redis for a cached response
+    const cached = await redis.get(cacheKey);
+    if (cached) {
+        console.log("Cache hit");
+        return JSON.parse(cached);
+    }
+
+    console.log("Cache miss — calling OpenAI");
+
     // Construct the prompt to send to the AI model
     const prompt = `Create a ${days}-day travel itinerary for ${destination} focused on: ${preferences.join(', ')}. Return it in a day-by-day plan.`;
 
     // Send the prompt to OpenAI's GPT-4o model and wait for the response
     const chat = await openai.chat.completions.create({
-        model: 'gpt-4o', // Use OpenAI's GPT-4 Omni model
-        messages: [{ role: 'user', content: prompt }], // User message to start the conversation
+        model: 'gpt-4o',
+        messages: [{ role: 'user', content: prompt }],
     });
 
-    // Return the content of the first choice (the generated itinerary text)
-    return chat.choices[0].message.content;
+    // Extract the content of the first choice (the generated itinerary text)
+    const result = chat.choices[0].message.content;
+
+    // Store the result in Redis for 1 hour (3600 seconds)
+    await redis.set(cacheKey, JSON.stringify(result), 'EX', 60 * 60);
+
+    return result;
 }
