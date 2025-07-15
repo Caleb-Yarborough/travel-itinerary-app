@@ -1,3 +1,17 @@
+// main.tsx
+// -----------------------------------------------------------------------------
+// This is the entry point for the React + Vite + TypeScript frontend.
+// It initializes the React app and renders the <App /> component into the DOM.
+//
+// Key responsibilities:
+// - Applies React 18's `createRoot` API for concurrent rendering
+// - Uses `StrictMode` to enable extra warnings and checks during development
+// - Loads global CSS styles for consistent styling
+// - Mounts the app into the <div id="root"> defined in index.html
+//
+// This file is referenced in `index.html` via <script src="/src/main.tsx" type="module">
+// -----------------------------------------------------------------------------
+
 // Import StrictMode, a tool for highlighting potential problems in React code
 import { StrictMode } from 'react';
 

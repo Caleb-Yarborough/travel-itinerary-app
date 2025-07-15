@@ -1,3 +1,17 @@
+// generateItinerary.ts
+// -----------------------------------------------------------------------------
+// This utility file provides a single function to generate a travel itinerary
+// by sending a POST request to the backend API.
+//
+// It's used in the React frontend (App.tsx) to communicate with the Express
+// server, which in turn interacts with the OpenAI API (and optionally Redis caching).
+//
+// Key concepts involved:
+// - TypeScript typing (`ItineraryInput`) ensures data passed is valid
+// - Fetch API used to make an HTTP POST request to the backend
+// - JSON used for data exchange between client and server
+// -----------------------------------------------------------------------------
+
 // Define the shape of the input data expected for itinerary generation
 type ItineraryInput = {
     destination: string;      // The travel destination (e.g., "Italy")

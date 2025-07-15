@@ -1,22 +1,57 @@
-# fly.toml app configuration file generated for travel-itinerary-app on 2025-06-12T15:16:46-04:00
+# fly.toml
+# -----------------------------------------------------------------------------
+# This is the Fly.io configuration file for deploying the travel-itinerary-app.
+# It defines deployment metadata, runtime behavior, scaling, and resource limits.
 #
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+# This file is used when you run `fly deploy` to launch or update your app
+# on Fly.io’s global platform.
 #
+# Key features:
+# - Names the app and specifies the primary deployment region
+# - Configures the internal HTTP service (e.g., port 3000)
+# - Enables auto-scaling (start/stop VMs based on demand)
+# - Allocates CPU and memory resources for the deployed VM
+#
+# This setup is ideal for hosting a Vite frontend or Express backend.
+# -----------------------------------------------------------------------------
 
+# The unique name of your app on Fly.io
 app = 'travel-itinerary-app'
+
+# The primary region where your app will be deployed (ATL = Atlanta)
 primary_region = 'atl'
 
+# ------------------------- Build Section -------------------------
 [build]
+# (This section can define custom Docker builds or static apps — empty by default)
 
+# ------------------------- HTTP Service Section ------------------
 [http_service]
-  internal_port = 3000
-  force_https = true
-  auto_stop_machines = 'stop'
-  auto_start_machines = true
-  min_machines_running = 0
-  processes = ['app']
+# The internal port your app listens on (e.g., Vite or Node.js dev server)
+internal_port = 3000
 
+# Redirect all HTTP traffic to HTTPS
+force_https = true
+
+# Automatically stop idle machines to save resources (pay-per-use)
+auto_stop_machines = 'stop'
+
+# Automatically start machines when a new request comes in
+auto_start_machines = true
+
+# Ensure zero machines stay online when not in use (serverless-like behavior)
+min_machines_running = 0
+
+# Define the process group (default is usually 'app')
+processes = ['app']
+
+# ------------------------- VM Configuration ----------------------
 [[vm]]
-  memory = '1gb'
-  cpu_kind = 'shared'
-  cpus = 1
+# Allocate 1GB of RAM for the virtual machine
+memory = '1gb'
+
+# Use a shared CPU (good for small apps or dev/test)
+cpu_kind = 'shared'
+
+# Allocate 1 CPU core
+cpus = 1

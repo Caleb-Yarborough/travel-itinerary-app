@@ -1,62 +1,89 @@
-// src/App.tsx
-import { useState } from 'react';
-import { useLoadScript } from '@react-google-maps/api';
-import ItineraryForm from './components/ItineraryForm';
-import ParsedItinerary from './components/ParsedItinerary';
-import { generateItinerary } from './api/generateItinerary';
-import './App.css';
+// App.tsx
+// -----------------------------------------------------------------------------
+// This is the root component of the AI Travel Itinerary Planner frontend.
+// It is built using React with TypeScript and uses several key technologies:
+// - Google Maps API (via @react-google-maps/api) for destination autocomplete
+// - OpenAI API (via backend) to generate itineraries based on form input
+// - React hooks (`useState`, `useLoadScript`) for managing state and side effects
+// - Props to communicate between components (e.g., ItineraryForm → App)
+// - Conditional rendering for loading states and output display
+// - Optionally allows PDF export from ParsedItinerary
+// -----------------------------------------------------------------------------
 
+import { useState } from 'react';
+import { useLoadScript } from '@react-google-maps/api'; // Google Maps hook to load Places API
+import ItineraryForm from './components/ItineraryForm'; // Form component for user input
+import ParsedItinerary from './components/ParsedItinerary'; // Displays generated itinerary
+import { generateItinerary } from './api/generateItinerary'; // API helper for calling backend
+import './App.css'; // App-level styling
+
+// Defines the expected structure for form data passed into the itinerary generator
 type FormData = {
   destination: string;
   days: number;
   preferences: string[];
 };
 
+// Tells Google Maps which libraries to load; 'places' enables autocomplete
 const libraries: ('places')[] = ['places'];
 
 function App() {
+  // State to hold the generated plan (itinerary returned from backend or cache)
   const [plan, setPlan] = useState<any>(null);
+
+  // State to toggle showing usage instructions dropdown
   const [showInstructions, setShowInstructions] = useState(false);
+
+  // State to track loading status while fetching from backend / OpenAI
   const [isLoading, setIsLoading] = useState(false);
 
+  // Hook to load the Google Maps script and detect load status or errors
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY, // API key from environment
     libraries,
   });
 
+  // Callback passed to ItineraryForm to handle form submission
+  // Sends the input to the backend, gets response, and updates state
   const handleGenerate = async ({ destination, days, preferences }: FormData) => {
-    setIsLoading(true);
+    setIsLoading(true); // Show spinner while waiting
     try {
-      const res = await generateItinerary({ destination, days, preferences });
-      setPlan(typeof res === 'string' ? JSON.parse(res) : res);
+      const res = await generateItinerary({ destination, days, preferences }); // Call API
+      setPlan(typeof res === 'string' ? JSON.parse(res) : res); // Parse response if needed
     } catch (error) {
-      console.error('Failed to generate itinerary:', error);
+      console.error('Failed to generate itinerary:', error); // Log error for debugging
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Hide spinner after loading finishes
     }
   };
 
+  // Show error message if Google Maps failed to load
   if (loadError) return <div className="p-4">Error loading Google Maps</div>;
+
+  // Show loading message while waiting for Google Maps to initialize
   if (!isLoaded) return <div className="p-4">Loading Google Maps…</div>;
 
+  // Main UI rendering
   return (
     <div className="p-4 max-w-3xl mx-auto">
       <h1 className="app-title">AI Travel Itinerary Planner</h1>
 
-      {/* Description */}
+      {/* Introductory description below the title */}
       <p className="mb-6">
         Welcome to the AI Travel Itinerary Planner, a web application designed to help travelers craft customized day-by-day itineraries in just a few clicks. Powered by AI, the planner analyzes your chosen destination, trip length, and personal interests to generate detailed schedules, activity suggestions, and travel tips.
       </p>
 
-      {/* How to Use Dropdown */}
+      {/* Toggleable "How to Use" section */}
       <div className="mb-6">
         <button
-          onClick={() => setShowInstructions(prev => !prev)}
+          onClick={() => setShowInstructions(prev => !prev)} // Toggle dropdown visibility
           className="w-full flex justify-between items-center px-4 py-2 bg-gray-200 text-left rounded focus:outline-none"
         >
           <span className="font-semibold">How to Use</span>
           <span>{showInstructions ? '▲' : '▼'}</span>
         </button>
+
+        {/* Only show this block if instructions are toggled open */}
         {showInstructions && (
           <div className="mt-2 p-4 bg-gray-50 border rounded">
             <ol className="list-decimal list-inside space-y-2">
@@ -74,22 +101,22 @@ function App() {
         )}
       </div>
 
-      {/* Form */}
+      {/* User input form (child component) receives onSubmit prop from App */}
       <ItineraryForm onSubmit={handleGenerate} />
 
-      {/* Loading Spinner */}
+      {/* Show loading spinner if backend is generating itinerary */}
       {isLoading && (
         <div className="flex justify-center my-8">
           <div className="inline-block animate-spin rounded-full h-96 w-96 border-8 border-blue-600 border-t-transparent"></div>
         </div>
       )}
 
-      {/* Results and PDF Button */}
+      {/* Once a plan is generated and loading has finished, render output */}
       {plan && !isLoading && (
         <>
-          {/* Add CSS rule in App.css: .no-bullets ul { list-style: none; margin: 0; padding: 0; } */}
+          {/* HTML container for generated itinerary (used for PDF export) */}
           <div id="itinerary-output" className="no-bullets">
-            <ParsedItinerary plan={plan} />
+            <ParsedItinerary plan={plan} /> {/* Render child component with plan as prop */}
           </div>
         </>
       )}

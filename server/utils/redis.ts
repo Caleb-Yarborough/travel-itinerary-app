@@ -1,4 +1,19 @@
 // server/utils/redis.ts
+// -----------------------------------------------------------------------------
+// This utility module sets up and exports a configured Redis client instance
+// using the `ioredis` library. Redis is used for in-memory caching in the app.
+//
+// In this project, it's specifically used to cache generated itineraries in
+// `generatePlan.ts` to avoid redundant OpenAI API calls and improve performance.
+//
+// Redis setup supports both local development and production environments:
+// - Locally: connects to Redis at redis://localhost:6379
+// - In production (e.g., via Docker Compose): uses REDIS_URL from env variables
+//
+// Technologies:
+// - Redis: in-memory key-value store
+// - ioredis: advanced Redis client for Node.js
+// -----------------------------------------------------------------------------
 
 // Import the ioredis library, a robust Redis client for Node.js.
 // This library provides a powerful, performance-oriented API for interacting with Redis.
